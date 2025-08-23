@@ -1,16 +1,84 @@
-# rick_morthy_app
+# Rick and Morty App
 
-A new Flutter project.
+![Flutter](https://img.shields.io/badge/Flutter-3.32.4-blue?logo=flutter)
+![Dart](https://img.shields.io/badge/Dart-3.8.1-blue?logo=dart)
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+## 📃 Descrição
 
-A few resources to get you started if this is your first Flutter project:
+O **Rick and Morty App** é um aplicativo mobile desenvolvido em **Flutter** que consome a API pública do [Rick and Morty](https://rickandmortyapi.com/) para listar e exibir detalhes dos personagens da série.  
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+O projeto segue a **arquitetura MVVM**, utilizando **injeção de dependências com GetIt**, separando responsabilidades de forma clara e garantindo escalabilidade e manutenção mais simples.  
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+A responsividade é tratada pela classe `ResponsivityUtils`, que adapta espaçamentos, ícones, textos e imagens conforme o tamanho da tela, entregando uma experiência consistente em diferentes dispositivos.
+
+---
+
+## 💻 Tecnologias Utilizadas
+
+- **Flutter** → Framework multiplataforma (Android/iOS).  
+- **Dart** → Linguagem de programação.  
+- **Dio** → Cliente HTTP para consumo da API.  
+- **GetIt** → Injeção de dependências (DI).  
+- **ChangeNotifier** → Gerenciamento de estado reativo.  
+- **Connectivity Plus** → Verificação de conectividade com a internet.  
+- **Arquitetura MVVM** → Separação entre **Model**, **View** e **ViewModel**.  
+
+---
+
+## 🛎️ Funcionalidades
+
+### 🔹 Lista de Personagens
+- Consome o endpoint `character` da API.  
+- Exibe:
+  - **Imagem** do personagem  
+  - **Nome**  
+  - **Espécie**  
+- Suporte a paginação infinita.  
+- Ícone de erro exibido em caso de falha no carregamento da imagem.  
+
+### 🔹 Detalhes do Personagem
+- Exibe informações detalhadas:
+  - Nome  
+  - Status  
+  - Espécie  
+  - Imagem em destaque  
+
+### 🔹 Gerenciamento de Estados
+- **Loading** → Indicador de carregamento.  
+- **Success** → Dados carregados com sucesso.  
+- **Empty** → Nenhum resultado encontrado.  
+- **Error** → Erro genérico com retry.  
+- **No Connection** → Ausência de conexão com retry.  
+
+### 🔹 Navegação
+- Navegação feita com `Navigator` e `NavigationService` (`navigatorKey`).  
+- Rotas centralizadas no `AppRouteManager`.  
+
+---
+
+## 📱 Responsividade
+
+- A classe `ResponsivityUtils` adapta:
+  - Ícones  
+  - Textos  
+  - Espaçamentos  
+  - Imagens  
+- Baseada em `MediaQuery` para diferentes resoluções.  
+- Garantindo escalabilidade e experiência consistente.  
+
+---
+
+## ▶️ Como Rodar o Projeto
+
+```bash
+# 1. Clone o repositório
+git clone https://github.com/seu-user/rick-morthy-app.git
+cd rick-morthy-app
+
+# 2. Instale as dependências
+flutter pub get
+
+# 3. Rode o app
+flutter run
