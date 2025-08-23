@@ -1,5 +1,7 @@
 ﻿import 'package:flutter/foundation.dart';
+import 'package:rick_morthy_app/core/constants/core_app.dart';
 import 'package:rick_morthy_app/core/constants/screen_states.dart';
+import 'package:rick_morthy_app/data/dto/request/info_request_dto.dart';
 import 'package:rick_morthy_app/domain/entities/character_entity.dart';
 import 'package:rick_morthy_app/domain/repositories/character_repository.dart';
 
@@ -20,7 +22,7 @@ class CharacterViewModel with ChangeNotifier {
 
   int _currentPage = 1;
   bool _hasMore = true;
-  bool get hasMore => _hasMore; // ADICIONE ESTA LINHA
+  bool get hasMore => _hasMore;
 
   final ScreenStates _state = ScreenStates(currentState: ScreenStates.loadingState);
   int get state => _state.currentState;
@@ -36,7 +38,9 @@ class CharacterViewModel with ChangeNotifier {
     _error = '';
 
     try {
-      final newCharacters = await repository.getCharacters(page: _currentPage);
+      final params = InfoRequestDTO(page: _currentPage, size: CoreApp.pageSize);
+
+      final newCharacters = await repository.getCharacters(params);
 
       if (newCharacters.isEmpty && _characters.isEmpty) {
         _updateState(ScreenStates.emptyState);

@@ -58,7 +58,7 @@ class _CharacterListPageState extends State<CharacterListPage> {
 
   Widget _buildBody() {
     if (widget.viewModel.isLoading && widget.viewModel.characters.isEmpty) {
-      return const AppLoadWidget(label: 'Carregando personagens...');
+      return const AppLoadWidget(label: 'Carregando personagens');
     }
 
     if (widget.viewModel.hasError && widget.viewModel.characters.isEmpty) {
