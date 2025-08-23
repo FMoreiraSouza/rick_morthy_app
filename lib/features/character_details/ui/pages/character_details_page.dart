@@ -1,7 +1,9 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:rick_morthy_app/core/constants/responsivity_contants.dart';
 import 'package:rick_morthy_app/core/enums/flow_state.dart';
 import 'package:rick_morthy_app/core/ui/states/app_load_widget.dart';
 import 'package:rick_morthy_app/core/ui/states/flow_state_widget.dart';
+import 'package:rick_morthy_app/core/utils/responsivity_utils.dart';
 import 'package:rick_morthy_app/features/character_details/presentation/viewmodel/character_details_view_model.dart';
 
 class CharacterDetailsPage extends StatefulWidget {
@@ -14,6 +16,8 @@ class CharacterDetailsPage extends StatefulWidget {
 }
 
 class _CharacterDetailsPageState extends State<CharacterDetailsPage> {
+  late ResponsivityUtils responsivity;
+
   @override
   void initState() {
     super.initState();
@@ -35,13 +39,20 @@ class _CharacterDetailsPageState extends State<CharacterDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
+    responsivity = ResponsivityUtils(context);
     _fetchArguments(context);
 
     return Scaffold(
       appBar: AppBar(
         title: widget.viewModel.character != null
-            ? Text(widget.viewModel.character!.name)
-            : const Text('Detalhes do Personagem'),
+            ? Text(
+                widget.viewModel.character!.name,
+                style: TextStyle(fontSize: responsivity.textSize() * 1.2),
+              )
+            : Text(
+                'Detalhes do Personagem',
+                style: TextStyle(fontSize: responsivity.textSize() * 1.2),
+              ),
       ),
       body: _buildBody(),
     );
@@ -49,7 +60,10 @@ class _CharacterDetailsPageState extends State<CharacterDetailsPage> {
 
   Widget _buildBody() {
     if (widget.viewModel.isLoading) {
-      return const AppLoadWidget(label: 'Carregando personagem...');
+      return AppLoadWidget(
+        label: 'Carregando personagem...',
+        padding: responsivity.responsiveAllPadding(ResponsivityConstants.verticalPaddingPercentage),
+      );
     }
 
     if (widget.viewModel.hasError || widget.viewModel.character == null) {
@@ -59,6 +73,7 @@ class _CharacterDetailsPageState extends State<CharacterDetailsPage> {
             ? widget.viewModel.error
             : 'Personagem não disponível',
         flowState: FlowState.error,
+        responsivity: responsivity,
       );
     }
 
@@ -67,19 +82,27 @@ class _CharacterDetailsPageState extends State<CharacterDetailsPage> {
 
   Widget _buildCharacterDetails() {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
+      padding: responsivity.responsivePadding(
+        horizontalPercentage: ResponsivityConstants.horizontalPaddingPercentage,
+        verticalPercentage: ResponsivityConstants.verticalPaddingPercentage,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Center(
-            child: Image.network(
-              widget.viewModel.character!.image,
-              width: 200,
-              height: 200,
-              fit: BoxFit.cover,
+            child: ClipRRect(
+              borderRadius: responsivity.responsiveBorderRadius(
+                ResponsivityConstants.borderRadiusPercentage,
+              ),
+              child: Image.network(
+                widget.viewModel.character!.image,
+                width: responsivity.imageSize(),
+                height: responsivity.imageSize(),
+                fit: BoxFit.cover,
+              ),
             ),
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: responsivity.largeSpacing()),
           _buildInfoCard(),
         ],
       ),
@@ -89,12 +112,14 @@ class _CharacterDetailsPageState extends State<CharacterDetailsPage> {
   Widget _buildInfoCard() {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: responsivity.responsiveAllPadding(ResponsivityConstants.defaultSpacingPercentage),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildInfoRow('Nome', widget.viewModel.character!.name),
+            SizedBox(height: responsivity.defaultSpacing()),
             _buildInfoRow('Status', widget.viewModel.character!.status),
+            SizedBox(height: responsivity.defaultSpacing()),
             _buildInfoRow('Espécie', widget.viewModel.character!.species),
           ],
         ),
@@ -103,15 +128,17 @@ class _CharacterDetailsPageState extends State<CharacterDetailsPage> {
   }
 
   Widget _buildInfoRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('$label: ', style: const TextStyle(fontWeight: FontWeight.bold)),
-          Expanded(child: Text(value)),
-        ],
-      ),
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '$label: ',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: responsivity.textSize()),
+        ),
+        Expanded(
+          child: Text(value, style: TextStyle(fontSize: responsivity.textSize())),
+        ),
+      ],
     );
   }
 }

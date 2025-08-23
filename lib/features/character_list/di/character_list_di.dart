@@ -8,7 +8,7 @@ import 'package:rick_morthy_app/data/datasources/character_remote_datasource.dar
 import 'package:rick_morthy_app/data/datasources/character_remote_datasource_impl.dart';
 import 'package:rick_morthy_app/domain/repositories/character_repository.dart';
 import 'package:rick_morthy_app/domain/repositories/character_repository_impl.dart';
-import 'package:rick_morthy_app/features/character_list/presentation/viewmodels/character_view_model.dart';
+import 'package:rick_morthy_app/features/character_list/presentation/viewmodels/character_list_view_model.dart';
 import 'package:rick_morthy_app/features/character_list/ui/pages/character_list_page.dart';
 
 class CharacterListDI extends PageDependency {
@@ -29,13 +29,13 @@ class CharacterListDI extends PageDependency {
 
     var characterRepository = DependencyManager.get<CharacterRepository>();
 
-    DependencyManager.registerSingleton<CharacterViewModel>(
-      CharacterViewModel(characterRepository),
+    DependencyManager.registerSingleton<CharacterListViewModel>(
+      CharacterListViewModel(characterRepository),
     );
   }
 
   @override
   StatefulWidget getPage() {
-    return CharacterListPage(viewModel: DependencyManager.get<CharacterViewModel>());
+    return CharacterListPage(viewModel: DependencyManager.get<CharacterListViewModel>());
   }
 }
