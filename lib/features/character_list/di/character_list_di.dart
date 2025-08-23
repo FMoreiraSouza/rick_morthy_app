@@ -9,7 +9,7 @@ import 'package:rick_morthy_app/data/datasources/character_remote_datasource_imp
 import 'package:rick_morthy_app/domain/repositories/character_repository.dart';
 import 'package:rick_morthy_app/domain/repositories/character_repository_impl.dart';
 import 'package:rick_morthy_app/features/character_list/presentation/viewmodels/character_list_view_model.dart';
-import 'package:rick_morthy_app/features/character_list/view/pages/character_list_page.dart';
+import 'package:rick_morthy_app/features/character_list/view/character_list_view.dart';
 
 class CharacterListDI extends PageDependency {
   @override
@@ -36,6 +36,6 @@ class CharacterListDI extends PageDependency {
 
   @override
   StatefulWidget getPage() {
-    return CharacterListPage(viewModel: DependencyManager.get<CharacterListViewModel>());
+    return CharacterListView(viewModel: DependencyManager.get<CharacterListViewModel>());
   }
 }
