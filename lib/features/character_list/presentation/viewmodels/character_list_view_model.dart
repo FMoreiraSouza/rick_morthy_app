@@ -1,5 +1,4 @@
-﻿// viewmodel/character_list_viewmodel.dart
-import 'package:flutter/foundation.dart';
+﻿import 'package:flutter/foundation.dart';
 import 'package:rick_morthy_app/core/constants/core_app.dart';
 import 'package:rick_morthy_app/core/constants/screen_states.dart';
 import 'package:rick_morthy_app/core/network/failure.dart';
@@ -55,7 +54,6 @@ class CharacterListViewModel with ChangeNotifier {
         _updateState(ScreenStates.successState);
       }
     } catch (e) {
-      // Usa o método estático da classe Failure para converter
       final failure = Failure.fromException(e);
       _checkErrorState(failure);
     } finally {
@@ -77,7 +75,6 @@ class CharacterListViewModel with ChangeNotifier {
     }
   }
 
-  // Método para tratar erros específicos
   void _checkErrorState(Failure failure) {
     _error = failure.message;
 
@@ -90,7 +87,6 @@ class CharacterListViewModel with ChangeNotifier {
     }
   }
 
-  // Métodos privados para gerenciar estado
   void _updateState(int newState) {
     _state.currentState = newState;
     notifyListeners();

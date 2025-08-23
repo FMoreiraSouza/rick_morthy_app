@@ -7,13 +7,11 @@ import 'package:rick_morthy_app/features/character_details/ui/pages/character_de
 class CharacterDetailsDI extends PageDependency {
   @override
   void init() {
-    // Registra o ViewModel como singleton (assim como no exemplo)
     DependencyManager.registerSingleton<CharacterDetailsViewModel>(CharacterDetailsViewModel());
   }
 
   @override
   StatefulWidget getPage() {
-    // Passa o ViewModel para a página, igual no exemplo
     return CharacterDetailsPage(viewModel: DependencyManager.get<CharacterDetailsViewModel>());
   }
 }
