@@ -1,6 +1,7 @@
 ﻿import 'package:flutter/foundation.dart';
 import 'package:rick_morthy_app/core/constants/core_app.dart';
 import 'package:rick_morthy_app/core/constants/screen_states.dart';
+import 'package:rick_morthy_app/core/network/failure.dart';
 import 'package:rick_morthy_app/data/dto/request/info_request_dto.dart';
 import 'package:rick_morthy_app/domain/entities/character_entity.dart';
 import 'package:rick_morthy_app/domain/repositories/character_repository.dart';
@@ -54,8 +55,9 @@ class CharacterViewModel with ChangeNotifier {
         _updateState(ScreenStates.successState);
       }
     } catch (e) {
-      _error = e.toString();
-      _updateState(ScreenStates.errorState);
+      // Convertendo a exception para Failure
+      final failure = _convertExceptionToFailure(e);
+      _checkErrorState(failure);
     } finally {
       _setLoading(false);
     }
@@ -73,6 +75,43 @@ class CharacterViewModel with ChangeNotifier {
     if (!_isLoading && _hasMore) {
       await loadCharacters();
     }
+  }
+
+  // Método para tratar erros específicos
+  void _checkErrorState(Failure failure) {
+    _error = failure.message;
+
+    switch (failure.runtimeType) {
+      case const (ConnectionFailure):
+        _updateState(ScreenStates.noConnection);
+        break;
+      default:
+        _updateState(ScreenStates.errorState);
+    }
+  }
+
+  // Método auxiliar para converter exceptions em Failures
+  Failure _convertExceptionToFailure(dynamic exception) {
+    if (exception is Failure) {
+      return exception;
+    }
+
+    final errorMessage = exception.toString();
+
+    // Você pode adicionar mais verificações específicas aqui
+    if (errorMessage.contains('Connection') ||
+        errorMessage.contains('Socket') ||
+        errorMessage.contains('Network')) {
+      return const ConnectionFailure();
+    }
+
+    if (errorMessage.contains('Server') ||
+        errorMessage.contains('500') ||
+        errorMessage.contains('404')) {
+      return ServerFailure(errorMessage);
+    }
+
+    return UnknownFailure(errorMessage);
   }
 
   // Métodos privados para gerenciar estado

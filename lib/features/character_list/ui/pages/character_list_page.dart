@@ -1,5 +1,6 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:rick_morthy_app/app_routes.dart';
+import 'package:rick_morthy_app/core/constants/screen_states.dart';
 import 'package:rick_morthy_app/core/enums/flow_state.dart';
 import 'package:rick_morthy_app/core/ui/states/app_load_widget.dart';
 import 'package:rick_morthy_app/core/ui/states/flow_state_widget.dart';
@@ -57,56 +58,90 @@ class _CharacterListPageState extends State<CharacterListPage> {
   }
 
   Widget _buildBody() {
-    if (widget.viewModel.isLoading && widget.viewModel.characters.isEmpty) {
+    // Se estiver no estado de loading inicial, mostra apenas o loading
+    if (widget.viewModel.state == ScreenStates.loadingState &&
+        widget.viewModel.characters.isEmpty) {
       return const AppLoadWidget(label: 'Carregando personagens');
     }
 
-    if (widget.viewModel.hasError && widget.viewModel.characters.isEmpty) {
-      return FlowStateWidget(
-        function: widget.viewModel.refreshCharacters,
-        title: 'Erro ao carregar',
-        description: widget.viewModel.error,
-        flowState: FlowState.error,
-      );
-    }
+    // Para outros estados, mostra o widget principal com loading overlay apenas para paginação
+    return Stack(
+      children: [
+        // Widget principal baseado no estado
+        _getWidget(widget.viewModel.state),
 
+        // Loading overlay apenas para paginação (quando já tem dados)
+        if (widget.viewModel.isLoading && widget.viewModel.characters.isNotEmpty)
+          const Positioned.fill(child: AppLoadWidget()),
+      ],
+    );
+  }
+
+  Widget _getWidget(int state) {
+    switch (state) {
+      case ScreenStates.successState:
+        return _buildCharacterList();
+      case ScreenStates.emptyState:
+        return FlowStateWidget(
+          title: 'Nenhum personagem encontrado',
+          description: 'Não há personagens disponíveis no momento.',
+          hideButton: true,
+          flowState: FlowState.empty,
+        );
+      case ScreenStates.loadingState:
+        // Este caso só será chamado quando não houver personagens
+        return const AppLoadWidget(label: 'Carregando personagens');
+      case ScreenStates.noConnection:
+        return FlowStateWidget(
+          function: widget.viewModel.refreshCharacters,
+          title: 'Sem conexão',
+          description: 'Verifique sua conexão com a internet e tente novamente.',
+          flowState: FlowState.noConnection,
+        );
+      case ScreenStates.errorState:
+      default:
+        return FlowStateWidget(
+          function: widget.viewModel.refreshCharacters,
+          title: 'Erro ao carregar',
+          description: widget.viewModel.error,
+          flowState: FlowState.error,
+        );
+    }
+  }
+
+  Widget _buildCharacterList() {
     return ListView.builder(
       controller: _scrollController,
       itemCount: widget.viewModel.characters.length + (widget.viewModel.hasMore ? 1 : 0),
       itemBuilder: (context, index) {
-        if (index == widget.viewModel.characters.length) {
-          return _buildLoadingMore();
+        if (index >= widget.viewModel.characters.length) {
+          // Mostrar um loading simples no final da lista para paginação
+          return const Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Center(child: CircularProgressIndicator()),
+          );
         }
 
         final character = widget.viewModel.characters[index];
         return ListTile(
-          leading: Image.network(character.image, width: 50, height: 50, fit: BoxFit.cover),
+          leading: Image.network(
+            character.image,
+            width: 50,
+            height: 50,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
+          ),
           title: Text(character.name),
-          subtitle: Text('${character.status} - ${character.species}'),
-          // No método onTap do ListTile:
+          subtitle: Text(character.species),
           onTap: () {
             Navigator.pushNamed(
               context,
               AppRoutes.characterDetails,
-              arguments: {'character': character}, // Garantindo que sempre passamos o character
+              arguments: {'character': character},
             );
           },
         );
       },
-    );
-  }
-
-  Widget _buildLoadingMore() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Center(
-        child: widget.viewModel.isLoading
-            ? const CircularProgressIndicator()
-            : ElevatedButton(
-                onPressed: widget.viewModel.loadNextPage,
-                child: const Text('Carregar mais'),
-              ),
-      ),
     );
   }
 }

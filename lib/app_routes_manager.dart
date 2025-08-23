@@ -20,8 +20,7 @@ class AppRouteManager {
         return di.getPage();
       },
       AppRoutes.characterDetails: (context) {
-        final arguments = ModalRoute.of(context)!.settings.arguments;
-        final di = CharacterDetailsDI(arguments: arguments);
+        final di = CharacterDetailsDI();
         di.init();
         return di.getPage();
       },

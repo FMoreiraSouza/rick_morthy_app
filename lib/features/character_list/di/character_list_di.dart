@@ -1,6 +1,8 @@
 ﻿import 'package:flutter/widgets.dart';
 import 'package:rick_morthy_app/core/di/dependency_manager.dart';
 import 'package:rick_morthy_app/core/di/dio_di_manager.dart';
+import 'package:rick_morthy_app/core/network/drivers/connectivity_driver.dart';
+import 'package:rick_morthy_app/core/network/drivers/connectivity_driver_impl.dart';
 import 'package:rick_morthy_app/core/utils/page_dependency.dart';
 import 'package:rick_morthy_app/data/datasources/character_remote_datasource.dart';
 import 'package:rick_morthy_app/data/datasources/character_remote_datasource_impl.dart';
@@ -12,19 +14,21 @@ import 'package:rick_morthy_app/features/character_list/ui/pages/character_list_
 class CharacterListDI extends PageDependency {
   @override
   void init() {
-    // DataSource
+    DependencyManager.registerSingleton<ConnectivityDriver>(ConnectivityDriverImpl());
+
     DependencyManager.registerSingleton<CharacterRemoteDataSource>(
-      CharacterRemoteDataSourceImpl(DioDIManager.getDio()),
+      CharacterRemoteDataSourceImpl(
+        dio: DioDIManager.getDio(),
+        connectivityDriver: DependencyManager.get<ConnectivityDriver>(),
+      ),
     );
 
-    // Repository
     DependencyManager.registerSingleton<CharacterRepository>(
       CharacterRepositoryImpl(DependencyManager.get<CharacterRemoteDataSource>()),
     );
 
     var characterRepository = DependencyManager.get<CharacterRepository>();
 
-    // ViewModel
     DependencyManager.registerSingleton<CharacterViewModel>(
       CharacterViewModel(characterRepository),
     );
