@@ -1,15 +1,18 @@
 ﻿import 'package:flutter/foundation.dart';
+import 'package:rick_morthy_app/core/constants/core_app.dart';
 import 'package:rick_morthy_app/core/constants/screen_states.dart';
-import 'package:rick_morthy_app/domain/entities/character_entity.dart';
+import 'package:rick_morthy_app/core/network/failure.dart';
+import 'package:rick_morthy_app/data/dto/request/info_request_dto.dart';
+import 'package:rick_morthy_app/domain/model/character_model.dart';
 import 'package:rick_morthy_app/domain/repositories/character_repository.dart';
 
-class CharacterViewModel with ChangeNotifier {
+class CharacterListViewModel with ChangeNotifier {
   final CharacterRepository repository;
 
-  CharacterViewModel(this.repository);
+  CharacterListViewModel(this.repository);
 
-  final List<CharacterEntity> _characters = [];
-  List<CharacterEntity> get characters => _characters;
+  final List<CharacterModel> _characters = [];
+  List<CharacterModel> get characters => _characters;
 
   String _error = '';
   String get error => _error;
@@ -20,6 +23,7 @@ class CharacterViewModel with ChangeNotifier {
 
   int _currentPage = 1;
   bool _hasMore = true;
+  bool get hasMore => _hasMore;
 
   final ScreenStates _state = ScreenStates(currentState: ScreenStates.loadingState);
   int get state => _state.currentState;
@@ -35,7 +39,8 @@ class CharacterViewModel with ChangeNotifier {
     _error = '';
 
     try {
-      final newCharacters = await repository.getCharacters(page: _currentPage);
+      final params = InfoRequestDTO(page: _currentPage, size: CoreApp.pageSize);
+      final newCharacters = await repository.getCharacters(params);
 
       if (newCharacters.isEmpty && _characters.isEmpty) {
         _updateState(ScreenStates.emptyState);
@@ -49,8 +54,8 @@ class CharacterViewModel with ChangeNotifier {
         _updateState(ScreenStates.successState);
       }
     } catch (e) {
-      _error = e.toString();
-      _updateState(ScreenStates.errorState);
+      final failure = Failure.fromException(e);
+      _checkErrorState(failure);
     } finally {
       _setLoading(false);
     }
@@ -70,7 +75,18 @@ class CharacterViewModel with ChangeNotifier {
     }
   }
 
-  // Métodos privados para gerenciar estado
+  void _checkErrorState(Failure failure) {
+    _error = failure.message;
+
+    switch (failure.runtimeType) {
+      case const (ConnectionFailure):
+        _updateState(ScreenStates.noConnection);
+        break;
+      default:
+        _updateState(ScreenStates.errorState);
+    }
+  }
+
   void _updateState(int newState) {
     _state.currentState = newState;
     notifyListeners();

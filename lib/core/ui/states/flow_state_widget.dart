@@ -1,5 +1,7 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:rick_morthy_app/core/constants/responsivity_contants.dart';
 import 'package:rick_morthy_app/core/enums/flow_state.dart';
+import 'package:rick_morthy_app/core/utils/responsivity_utils.dart';
 
 class FlowStateWidget extends StatelessWidget {
   const FlowStateWidget({
@@ -9,6 +11,7 @@ class FlowStateWidget extends StatelessWidget {
     required this.description,
     this.hideButton = false,
     required this.flowState,
+    required this.responsivity,
   });
 
   final Function? function;
@@ -16,29 +19,40 @@ class FlowStateWidget extends StatelessWidget {
   final String description;
   final bool hideButton;
   final FlowState flowState;
+  final ResponsivityUtils responsivity;
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: responsivity.responsiveAllPadding(
+          ResponsivityConstants.horizontalPaddingPercentage,
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Icon(_getIcon(flowState), size: 64, color: _getIconColor(flowState, context)),
-            const SizedBox(height: 16),
+            Icon(
+              _getIcon(flowState),
+              size: responsivity.iconSize(),
+              color: _getIconColor(flowState, context),
+            ),
+            SizedBox(height: responsivity.defaultSpacing()),
             Text(
               title,
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.headlineSmall,
+              style: Theme.of(
+                context,
+              ).textTheme.headlineSmall?.copyWith(fontSize: responsivity.textSize() * 1.3),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: responsivity.smallSpacing()),
             Text(
               description,
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyMedium,
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(fontSize: responsivity.textSize()),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: responsivity.defaultSpacing()),
             Visibility(
               visible: !hideButton,
               child: ElevatedButton(
@@ -47,7 +61,10 @@ class FlowStateWidget extends StatelessWidget {
                     function!();
                   }
                 },
-                child: const Text('Tentar Novamente'),
+                child: Text(
+                  'Tentar Novamente',
+                  style: TextStyle(fontSize: responsivity.textSize()),
+                ),
               ),
             ),
           ],

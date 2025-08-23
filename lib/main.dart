@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:rick_morthy_app/app_routes.dart';
 import 'package:rick_morthy_app/app_routes_manager.dart';
-import 'package:rick_morthy_app/core/di/locator.dart';
+import 'package:rick_morthy_app/core/di/dio_di_manager.dart';
 import 'package:rick_morthy_app/core/utils/navigation_service.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  setupLocator();
+  DioDIManager.registerDio();
   runApp(const MyApp());
 }
 

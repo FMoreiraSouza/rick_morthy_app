@@ -6,11 +6,11 @@ import 'package:rick_morthy_app/features/character_list/di/character_list_di.dar
 class AppRouteManager {
   static final AppRouteManager _instance = AppRouteManager._internal();
 
+  AppRouteManager._internal();
+
   factory AppRouteManager() => _instance;
 
   static AppRouteManager get instance => _instance;
-
-  AppRouteManager._internal();
 
   Map<String, WidgetBuilder> getPages() {
     return {
@@ -20,8 +20,7 @@ class AppRouteManager {
         return di.getPage();
       },
       AppRoutes.characterDetails: (context) {
-        final arguments = ModalRoute.of(context)!.settings.arguments;
-        final di = CharacterDetailsDI(arguments: arguments);
+        final di = CharacterDetailsDI();
         di.init();
         return di.getPage();
       },
