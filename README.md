@@ -13,6 +13,8 @@ O projeto segue a **arquitetura MVVM**, utilizando **injeção de dependências 
 
 A responsividade é tratada pela classe `ResponsivityUtils`, que adapta espaçamentos, ícones, textos e imagens conforme o tamanho da tela, entregando uma experiência consistente em diferentes dispositivos móveis.
 
+![Rick and Morty App Demo](media/show.gif)
+
 ---
 
 ## 💻 Tecnologias Utilizadas
