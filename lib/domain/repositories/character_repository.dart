@@ -2,5 +2,4 @@
 
 abstract class CharacterRepository {
   Future<List<CharacterEntity>> getCharacters({int page = 1});
-  Future<CharacterEntity> getCharacterById(int id);
 }

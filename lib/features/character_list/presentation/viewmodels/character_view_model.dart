@@ -20,6 +20,7 @@ class CharacterViewModel with ChangeNotifier {
 
   int _currentPage = 1;
   bool _hasMore = true;
+  bool get hasMore => _hasMore; // ADICIONE ESTA LINHA
 
   final ScreenStates _state = ScreenStates(currentState: ScreenStates.loadingState);
   int get state => _state.currentState;

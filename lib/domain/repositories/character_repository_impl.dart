@@ -12,9 +12,4 @@ class CharacterRepositoryImpl implements CharacterRepository {
     final response = await remoteDataSource.getCharacters(page: page);
     return response.results.map((characterDto) => characterDto.toEntity()).toList();
   }
-
-  @override
-  Future<CharacterEntity> getCharacterById(int id) async {
-    return await remoteDataSource.getCharacterById(id);
-  }
 }
