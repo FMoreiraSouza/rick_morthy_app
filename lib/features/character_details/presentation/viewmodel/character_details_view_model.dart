@@ -1,9 +1,9 @@
 ﻿import 'package:flutter/foundation.dart';
-import 'package:rick_morthy_app/domain/entities/character_entity.dart';
+import 'package:rick_morthy_app/domain/model/character_model.dart';
 
 class CharacterDetailsViewModel with ChangeNotifier {
-  CharacterEntity? _character;
-  CharacterEntity? get character => _character;
+  CharacterModel? _character;
+  CharacterModel? get character => _character;
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -17,7 +17,7 @@ class CharacterDetailsViewModel with ChangeNotifier {
 
     try {
       if (args != null && args.containsKey('character')) {
-        _character = args['character'] as CharacterEntity;
+        _character = args['character'] as CharacterModel;
       } else {
         _error = 'Personagem não encontrado';
       }

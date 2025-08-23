@@ -3,7 +3,7 @@ import 'package:rick_morthy_app/core/constants/core_app.dart';
 import 'package:rick_morthy_app/core/constants/screen_states.dart';
 import 'package:rick_morthy_app/core/network/failure.dart';
 import 'package:rick_morthy_app/data/dto/request/info_request_dto.dart';
-import 'package:rick_morthy_app/domain/entities/character_entity.dart';
+import 'package:rick_morthy_app/domain/model/character_model.dart';
 import 'package:rick_morthy_app/domain/repositories/character_repository.dart';
 
 class CharacterListViewModel with ChangeNotifier {
@@ -11,8 +11,8 @@ class CharacterListViewModel with ChangeNotifier {
 
   CharacterListViewModel(this.repository);
 
-  final List<CharacterEntity> _characters = [];
-  List<CharacterEntity> get characters => _characters;
+  final List<CharacterModel> _characters = [];
+  List<CharacterModel> get characters => _characters;
 
   String _error = '';
   String get error => _error;

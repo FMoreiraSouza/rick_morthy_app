@@ -1,4 +1,4 @@
-﻿import 'package:rick_morthy_app/domain/entities/character_entity.dart';
+﻿import 'package:rick_morthy_app/domain/model/character_model.dart';
 
 class CharacterDTO {
   final int id;
@@ -25,7 +25,7 @@ class CharacterDTO {
     );
   }
 
-  CharacterEntity toEntity() {
-    return CharacterEntity(id: id, name: name, status: status, species: species, image: image);
+  CharacterModel toEntity() {
+    return CharacterModel(id: id, name: name, status: status, species: species, image: image);
   }
 }

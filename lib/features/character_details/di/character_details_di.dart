@@ -2,7 +2,7 @@
 import 'package:rick_morthy_app/core/di/dependency_manager.dart';
 import 'package:rick_morthy_app/core/utils/page_dependency.dart';
 import 'package:rick_morthy_app/features/character_details/presentation/viewmodel/character_details_view_model.dart';
-import 'package:rick_morthy_app/features/character_details/ui/pages/character_details_page.dart';
+import 'package:rick_morthy_app/features/character_details/view/pages/character_details_page.dart';
 
 class CharacterDetailsDI extends PageDependency {
   @override

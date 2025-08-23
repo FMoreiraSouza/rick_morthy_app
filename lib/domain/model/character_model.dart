@@ -1,11 +1,11 @@
-﻿class CharacterEntity {
+﻿class CharacterModel {
   final int id;
   final String name;
   final String status;
   final String species;
   final String image;
 
-  CharacterEntity({
+  CharacterModel({
     required this.id,
     required this.name,
     required this.status,
@@ -13,8 +13,8 @@
     required this.image,
   });
 
-  factory CharacterEntity.fromJson(Map<String, dynamic> json) {
-    return CharacterEntity(
+  factory CharacterModel.fromJson(Map<String, dynamic> json) {
+    return CharacterModel(
       id: json['id'],
       name: json['name'],
       status: json['status'],
